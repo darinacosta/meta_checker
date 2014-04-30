@@ -1,5 +1,14 @@
+require 'sinatra'
+require 'mechanize'
+require 'google_drive'
+require 'open-uri'
 
-require_relative 'require.rb'
+configure :development do
+  require 'pp'
+  require 'dotenv'
+
+  Dotenv.load
+end
 
 session = GoogleDrive.login(ENV['GOOGLE_USER'], ENV['GOOGLE_PASS'])
 agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Safari" }
@@ -41,7 +50,7 @@ post '/form' do
           }
         )
     end
-    end    
+    end
     erb :raw
   end
 end
