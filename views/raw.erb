@@ -1,0 +1,23 @@
+
+<%inc=0%>
+
+<%@meta.each do |metaHash|%>
+<b>URL: </b><a href='<%=@meta[inc][:URL]%>' target="_blank"><%=@meta[inc][:URL]%></a><br>
+<b>Expected Title:</b><%=@meta[inc][:expected]['title']%><br>
+<b>Live Title:</b><% if @meta[inc][:live]['title'].strip==@meta[inc][:expected]['title'].strip%><span style="color:green;"> 
+<%else%> 
+<span style="color:red;"> 
+<%end%>
+<%=@meta[0][:live]['title']%></span>
+<br><br>
+<b>Expected Description:</b><%=@meta[0][:expected]['descrip']%><br>
+<b>Live Description:</b>
+	<% if @meta[0][:live]['title'].strip==@meta[0][:expected]['title'].strip%>
+		<span style="color:green;"> 
+	<%else%> 
+		<span style="color:red;"> 
+	<%end%>
+<%=@meta[0][:live]['descrip']%></span>
+<%inc+=1%>
+<hr>
+<%end%>
