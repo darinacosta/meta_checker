@@ -2,17 +2,50 @@
 class Scanner
 
 	def initialize(cont)
-		@cont=cont
+		@cont=cont 
 	end
 
-	def pulldata
-		if /\/spreadsheet\//=~@cont && @cont.length<200
-			@ws = Session.spreadsheet_by_url("#{@cont}").worksheets[0]
-  			@rows=@ws.rows.count
+	def self.detect(cont)
+		if /\/spreadsheet\//=~cont && cont.length<200
+			return ImageScanner.new(cont)
 		elsif /\/document\//=~@cont && @cont.length<200
 			return "To do: create word document parser!"
-		else
-			agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Safari" }
+		else 
+			return ContentScanner.new(cont)
+		end
+	end
+end
+
+
+
+class ImageScanner < Scanner
+
+	def pulldata(cont)
+		#Create a page class, an images class
+		pages=[]
+		ws = Session.spreadsheet_by_url(cont).worksheets[0]
+  		rows=ws.rows.count
+  		for row in 1..ws.num_rows
+  			if /http/=~ws[row,1]
+  				meta.push("#{ws[row,1]}"=>[])
+  				if /http/=~ws[row,2]
+  					#put in hash1=>hash
+  				end
+  			elsif ws[row,1]==""
+  				if /http/=~ws[row,2]
+  					#put in hash1=>hash
+  				end
+  			end
+  		end
+	end
+end
+
+
+
+class ContentScanner < Scanner
+	
+	def pulldata(cont)
+		agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Safari" }
 			contItem=@cont.scan(/(URL:.+?)(?:Content|CONTENT|CONT|-{3,}|On-Page)/m)
 	    	meta=Array.new
 	    	contItem.each do |co|
@@ -40,7 +73,5 @@ class Scanner
 			end
 		end
 	end
-end
-
 
 
