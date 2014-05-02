@@ -2,7 +2,6 @@ require 'sinatra'
 require 'mechanize'
 require 'google_drive'
 require 'open-uri'
-require_relative 'lib/scanner.rb'
 
 configure :development do
   require 'pp'
@@ -11,8 +10,10 @@ configure :development do
   Dotenv.load
 end
 
-session = GoogleDrive.login(ENV['GOOGLE_USER'], ENV['GOOGLE_PASS'])
-agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Safari" }
+Session = GoogleDrive.login(ENV['GOOGLE_USER'], ENV['GOOGLE_PASS'])
+
+require_relative 'lib/scanner.rb'
+
 
 #Paths
 get '/' do
@@ -20,7 +21,7 @@ get '/' do
 end
 
 post '/form' do
-  cont=params[:URL1]
-  @meta=Scanner.new(cont).pulldata
+  input=params[:URL1]
+  @meta=Scanner.new(input).pulldata
   erb :raw
 end
