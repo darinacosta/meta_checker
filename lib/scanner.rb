@@ -22,21 +22,27 @@ class ImageScanner < Scanner
 
 	def pulldata(cont)
 		#Create a page class, an images class
-		pages=[]
+		images=[]
 		ws = Session.spreadsheet_by_url(cont).worksheets[0]
   		rows=ws.rows.count
   		for row in 1..ws.num_rows
   			if /http/=~ws[row,1]
-  				meta.push("#{ws[row,1]}"=>[])
   				if /http/=~ws[row,2]
-  					#put in hash1=>hash
+  					images.push(Image.new(ws[row,1],ws[row,2],ws[row,3],ws[row,4]))
   				end
-  			elsif ws[row,1]==""
-  				if /http/=~ws[row,2]
-  					#put in hash1=>hash
+  			elsif /http/=~ws[row,2] && /http/!~ws[row,1]
+  				parent_url=ws[row,1]
+  				url=ws[row,2]
+  				title=ws[row,3]
+  				alt=ws[row,4]
+  				until /http/=~parent_url do
+  					row-=1
+  					parent_url=ws[row,1]
   				end
-  			end
+  				images.push(Image.new(parent_url,url,ws[row,3],ws[row,4]))
+  			end 
   		end
+  		return images
 	end
 end
 
@@ -73,5 +79,21 @@ class ContentScanner < Scanner
 			end
 		end
 	end
+
+
+
+class Image
+
+	def initialize(parent_url,url,alt,title)
+		@url=url
+		@parent_url=parent_url
+		@alt=alt
+		@title=title
+	end
+
+	def returl
+		return "<b>Parent: </b>#{@parent_url}<br><b>Image: </b>#{@url}<br><b>Title: </b>#{@title}<br><br>"
+	end
+end
 
 
