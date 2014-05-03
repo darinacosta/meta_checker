@@ -14,6 +14,7 @@ class Scanner
 			return ContentScanner.new(cont)
 		end
 	end
+
 end
 
 
@@ -21,7 +22,6 @@ end
 class ImageScanner < Scanner
 
 	def pulldata(cont)
-		#Create a page class, an images class
 		images=[]
 		ws = Session.spreadsheet_by_url(cont).worksheets[0]
   		rows=ws.rows.count
@@ -44,6 +44,7 @@ class ImageScanner < Scanner
   		end
   		return images
 	end
+
 end
 
 
@@ -51,7 +52,7 @@ end
 class ContentScanner < Scanner
 	
 	def pulldata(cont)
-		agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Safari" }
+			agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Safari" }
 			contItem=@cont.scan(/(URL:.+?)(?:Content|CONTENT|CONT|-{3,}|On-Page)/m)
 	    	meta=Array.new
 	    	contItem.each do |co|
@@ -59,25 +60,42 @@ class ContentScanner < Scanner
 			      	url=/URL:[[:space:]](.*$)/.match(c)
 			      	url=url[1]
 			      	if url !~/^http/
-						url="http:\/\/"+url
-					else
-				    	html = agent.get("#{url}").body
-				    end
+						url="http://#{url}"
+					end
+				    html = agent.get("#{url}").body
 				    page = Nokogiri::HTML(html)
 				    liveTitle=page.css("title").text
-				    liveDescrip = page.css("meta[@name$='escription']/@content")
+				    liveDescrip = page.css("meta[@name$='escription']/@content").text
 				    title=/Page.Title.+?Tag\):(.*$)/.match(c)
 				    descrip=/Page.Description.+?Description\):(.*$)/.match(c)
-					meta.push(Content.new(url,liveTitle,liveDescrip,title[1],descrip[1]))
+					meta.push(Word.new(url,liveTitle,liveDescrip,title[1],descrip[1]))
 				end
 			end
 			return meta
 		end
+
 	end
 
-##Create a "Content" parent class and let the image and content classes inherit the equivalency function
 
-class Image
+
+class Content
+
+	def match?(live,exp)
+			if live.strip==exp.strip
+				live="<span style='color:green;'>#{live}</span>"
+			elsif live.strip==""
+				live="<i>Empty.</i>"
+			elsif live.strip!=exp.strip && live.strip!=""
+				live="<span style='color:red;'>#{live}</span>"
+			end
+			return live
+		end
+
+	end
+
+
+
+class Image < Content
 
 	def initialize(parent_url,url,alt,title)
 		@url=url
@@ -87,12 +105,16 @@ class Image
 	end
 
 	def display
-		return "<b>Parent: </b>#{@parent_url}<br><b>Image: </b>#{@url}<br><b>Title: </b>#{@title}<br><br>"
+		return "<b>Parent: </b>#{@parent_url}<br>
+		<b>Image: </b>#{@url}<br>
+		<b>Title: </b>#{@title}<br><br>"
 	end
+
 end
 
 
-class Content
+
+class Word < Content
 
 	def initialize(url,livetitle,livedesc,title,desc)
 		@url=url
@@ -103,25 +125,17 @@ class Content
 	end
 
 	def display
+		@livetitle=match?(@livetitle,@title)
+		@livedesc=match?(@livedesc,@desc)
 
-		def eq(live,exp)
-			if live.strip==exp.strip
-				live="<span style='color:green;'>#{live}</span>"
-			else
-				live="<span style='color:red;'>#{live}</span>"
-			end
-			return live
-		end
-
-		@livetitle=eq(@livetitle,@title)
-		#@livedesc=eq(@livedesc,@desc)
-
-		return "<b>URL: </b>#{@url}<br>
+		return "<b>URL: </b><a href='#{@url}' 
+		target='_blank'>#{@url}</a><br>
 		<b>Expected Title: </b>#{@title}<br>
 		<b>Live Title: </b>#{@livetitle}<br><br>
 		<b>Expected Description: </b>#{@desc}<br>
 		<b>Live Description: </b>#{@livedesc}<br><hr>"
 	end
+
 end
 
 
