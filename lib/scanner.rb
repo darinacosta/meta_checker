@@ -39,7 +39,7 @@ class ImageScanner < Scanner
   					row-=1
   					parent_url=ws[row,1]
   				end
-  				images.push(Image.new(parent_url,url,ws[row,3],ws[row,4]))
+  				images.push(Image.new(parent_url,url,title,alt))
   			end 
   		end
   		return images
@@ -57,30 +57,25 @@ class ContentScanner < Scanner
 	    	contItem.each do |co|
 	      		co.each do |c|
 			      	url=/URL:[[:space:]](.*$)/.match(c)
-				    html = agent.get("#{url[1]}").body
+			      	url=url[1]
+			      	if url !~/^http/
+						url="http:\/\/"+url
+					else
+				    	html = agent.get("#{url}").body
+				    end
 				    page = Nokogiri::HTML(html)
 				    liveTitle=page.css("title").text
 				    liveDescrip = page.css("meta[@name$='escription']/@content")
 				    title=/Page.Title.+?Tag\):(.*$)/.match(c)
 				    descrip=/Page.Description.+?Description\):(.*$)/.match(c)
-					    meta.push(
-					     	:url=>url[1],
-					        :live=>{
-					          'title'=>liveTitle,
-					          'descrip'=>@liveDescrip
-					          },
-					        expected: {
-					          'title'=>title[1],
-					          'descrip'=>descrip[1]
-					          }
-					        )
-					return "Still gotta make an ImageScanner class, but for now!:<br><br>", meta
+					meta.push(Content.new(url,liveTitle,liveDescrip,title[1],descrip[1]))
 				end
 			end
+			return meta
 		end
 	end
 
-
+##Create a "Content" parent class and let the image and content classes inherit the equivalency function
 
 class Image
 
@@ -91,8 +86,41 @@ class Image
 		@title=title
 	end
 
-	def returl
+	def display
 		return "<b>Parent: </b>#{@parent_url}<br><b>Image: </b>#{@url}<br><b>Title: </b>#{@title}<br><br>"
+	end
+end
+
+
+class Content
+
+	def initialize(url,livetitle,livedesc,title,desc)
+		@url=url
+		@livetitle=livetitle
+		@livedesc=livedesc
+		@title=title
+		@desc=desc
+	end
+
+	def display
+
+		def eq(live,exp)
+			if live.strip==exp.strip
+				live="<span style='color:green;'>#{live}</span>"
+			else
+				live="<span style='color:red;'>#{live}</span>"
+			end
+			return live
+		end
+
+		@livetitle=eq(@livetitle,@title)
+		#@livedesc=eq(@livedesc,@desc)
+
+		return "<b>URL: </b>#{@url}<br>
+		<b>Expected Title: </b>#{@title}<br>
+		<b>Live Title: </b>#{@livetitle}<br><br>
+		<b>Expected Description: </b>#{@desc}<br>
+		<b>Live Description: </b>#{@livedesc}<br><hr>"
 	end
 end
 
