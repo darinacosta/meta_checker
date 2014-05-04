@@ -3,6 +3,7 @@ class Scanner
 
 	def initialize(cont)
 		@cont=cont 
+		@agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Safari" }
 	end
 
 	def self.detect(cont)
@@ -15,6 +16,12 @@ class Scanner
 		end
 	end
 
+	def pullpage(uri)
+		html = @agent.get(uri).body
+		page = Nokogiri::HTML(html)
+		return page
+	end		
+
 end
 
 
@@ -26,21 +33,24 @@ class ImageScanner < Scanner
 		ws = Session.spreadsheet_by_url(cont).worksheets[0]
   		rows=ws.rows.count
   		for row in 1..ws.num_rows
-  			if /http/=~ws[row,1]
-  				if /http/=~ws[row,2]
-  					images.push(Image.new(ws[row,1],ws[row,2],ws[row,3],ws[row,4]))
-  				end
-  			elsif /http/=~ws[row,2] && /http/!~ws[row,1]
-  				parent_url=ws[row,1]
+  			if /http/=~ws[row,2]
   				url=ws[row,2]
   				title=ws[row,3]
   				alt=ws[row,4]
-  				until /http/=~parent_url do
-  					row-=1
+  				if /http/=~ws[row,1]
   					parent_url=ws[row,1]
+  				elsif /http/!~ws[row,1]
+  					until /http/=~parent_url do
+  						row-=1
+  						parent_url=ws[row,1]
+  					end
   				end
-  				images.push(Image.new(parent_url,url,title,alt))
-  			end 
+  				page = pullpage(parent_url)
+  				#file_path=page.at_css(".image")['#{url}']
+  				#file << file_path.split('/').last
+  				#finish this scraper
+  				images.push(Image.new(parent_url,url,title,alt,"",""))
+  			end
   		end
   		return images
 	end
@@ -52,7 +62,6 @@ end
 class ContentScanner < Scanner
 	
 	def pulldata(cont)
-			agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Safari" }
 			contItem=@cont.scan(/(URL:.+?)(?:Content|CONTENT|CONT|-{3,}|On-Page)/m)
 	    	meta=Array.new
 	    	contItem.each do |co|
@@ -61,9 +70,8 @@ class ContentScanner < Scanner
 			      	url=url[1]
 			      	if url !~/^http/
 						url="http://#{url}"
-					end
-				    html = agent.get("#{url}").body
-				    page = Nokogiri::HTML(html)
+					end			 
+				    page = pullpage(url)
 				    liveTitle=page.css("title").text
 				    liveDescrip = page.css("meta[@name$='escription']/@content").text
 				    title=/Page.Title.+?Tag\):(.*$)/.match(c)
@@ -97,7 +105,7 @@ class Content
 
 class Image < Content
 
-	def initialize(parent_url,url,alt,title)
+	def initialize(parent_url,url,title,alt,liveTitle,liveAlt)
 		@url=url
 		@parent_url=parent_url
 		@alt=alt
@@ -107,7 +115,8 @@ class Image < Content
 	def display
 		return "<b>Parent: </b>#{@parent_url}<br>
 		<b>Image: </b>#{@url}<br>
-		<b>Title: </b>#{@title}<br><br>"
+		<b>Title: </b>#{@title}<br>
+		<b>Live Title URL:</b> #{@liveTitle}<br><br>"
 	end
 
 end
