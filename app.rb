@@ -21,7 +21,7 @@ end
 
 post '/form' do
   input=params[:URL1]
-  @meta=Scanner.detect(input)
-  @meta=@meta.pulldata(input)
+  @meta=Scanner.detect(input).pulldata(input)
+  #@meta=@meta.pulldata(input)
   erb :raw
 end

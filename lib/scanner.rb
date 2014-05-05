@@ -46,10 +46,10 @@ class ImageScanner < Scanner
   					end
   				end
   				page = pullpage(parent_url)
-  				#file_path=page.at_css(".image")['#{url}']
-  				#file << file_path.split('/').last
-  				#finish this scraper
-  				images.push(Image.new(parent_url,url,title,alt,"",""))
+  				urlpath=url.split('/').last
+  				liveTitle=page.at_css("img[src*='#{urlpath}']")[:title]
+  				liveAlt=page.at_css("img[src*='#{urlpath}']")[:title]
+  				images.push(Image.new(parent_url,url,title,alt,liveTitle,liveAlt))
   			end
   		end
   		return images
@@ -89,7 +89,7 @@ class ContentScanner < Scanner
 class Content
 
 	def match?(live,exp)
-			if live.strip==exp.strip
+			if live.strip==exp.strip && live.strip!=""
 				live="<span style='color:green;'>#{live}</span>"
 			elsif live.strip==""
 				live="<i>Empty.</i>"
@@ -110,13 +110,19 @@ class Image < Content
 		@parent_url=parent_url
 		@alt=alt
 		@title=title
+		@liveTitle=liveTitle
+		@liveAlt=liveAlt
 	end
 
 	def display
+		#@liveTitle=match?(@liveTitle,@title)
+
 		return "<b>Parent: </b>#{@parent_url}<br>
 		<b>Image: </b>#{@url}<br>
 		<b>Title: </b>#{@title}<br>
-		<b>Live Title URL:</b> #{@liveTitle}<br><br>"
+		<b>Live Title:</b> #{@liveTitle}<br>
+		<b>Alt:</b> #{@alt}<br>
+		<b>Live Alt:</b> #{@liveAlt}<br><br>"
 	end
 
 end
