@@ -48,8 +48,8 @@ class ImageScanner < Scanner
   				page = pullpage(parent_url)
   				urlpath=url.split('/').last
   				liveTitle=page.at_css("img[src*='#{urlpath}']")[:title]
-  				liveAlt=page.at_css("img[src*='#{urlpath}']")[:title]
-  				images.push(Image.new(parent_url,url,title,alt,liveTitle,liveAlt))
+  				liveAlt=page.at_css("img[src*='#{urlpath}']")[:alt]
+  				images.push(Image.new(parent_url,url,title,alt,liveTitle.to_s,liveAlt.to_s))
   			end
   		end
   		return images
@@ -115,14 +115,23 @@ class Image < Content
 	end
 
 	def display
-		#@liveTitle=match?(@liveTitle,@title)
+		@liveTitle=match?(@liveTitle,@title)
+		@liveAlt=match?(@liveAlt,@alt)
 
-		return "<b>Parent: </b>#{@parent_url}<br>
+		return "<div class='imagerow'>
+		<div class='imagewrapper'>
+		<img src='#{@url}' width='120px'>
+		</div>
+		<div class='metablock'>
+		<b>Parent: </b>#{@parent_url}<br>
 		<b>Image: </b>#{@url}<br>
 		<b>Title: </b>#{@title}<br>
 		<b>Live Title:</b> #{@liveTitle}<br>
 		<b>Alt:</b> #{@alt}<br>
-		<b>Live Alt:</b> #{@liveAlt}<br><br>"
+		<b>Live Alt:</b> #{@liveAlt}<br>
+		<hr><br>
+		</div>
+		</div>"
 	end
 
 end

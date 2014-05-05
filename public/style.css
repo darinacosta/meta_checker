@@ -26,6 +26,20 @@ font-size:15px;
 font-weight:bold;
 }
 
+.imagerow {
+  width: 1000px;
+}
+
+.imagewrapper {
+    position: absolute;
+}
+
+
+.metablock {
+  display: inline-block;
+  margin-left: 145px;
+}
+
 .picURL{
 	margin: 5px 0 5px 0;
 }
