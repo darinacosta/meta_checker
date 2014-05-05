@@ -13,6 +13,7 @@ end
 Session = GoogleDrive.login(ENV['GOOGLE_USER'], ENV['GOOGLE_PASS'])
 
 require_relative 'lib/scanner.rb'
+require_relative 'lib/contentset.rb'
 
 #Paths
 get '/' do
@@ -21,6 +22,6 @@ end
 
 post '/form' do
   input=params[:URL1]
-  @meta=Scanner.detect(input).pulldata(input)
+  @meta=Scannerset::Scanner.detect(input).pulldata(input)
   erb :output
 end
