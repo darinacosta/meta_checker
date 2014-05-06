@@ -57,10 +57,15 @@ module Scannerset
 	  					live_alt="Page error."
 	  				else 
 		  				urlpath=url.split('/').last
-		  				live_title=page.at_css("img[src*='#{urlpath}']")[:title]
-		  				live_alt=page.at_css("img[src*='#{urlpath}']")[:alt]
+		  				if page.at_css("img[src*='#{urlpath}']")
+			  				live_title=page.at_css("img[src*='#{urlpath}']")[:title]
+			  				live_alt=page.at_css("img[src*='#{urlpath}']")[:alt]
+			  			else
+			  				live_title="<i>Image does not exist on page.</i>"
+			  				live_alt="<i>Image does not exist on page.</i>"
+			  			end
 		  			end
-	  				images.push(Image.new(parent_url,url,title,alt,live_title.to_s,live_alt.to_s,row))
+	  				images.push(Image.new(parent_url,url,title,alt,live_title.to_s,live_alt.to_s,row,urlpath))
 	  			end
 	  		end
 	  		return images

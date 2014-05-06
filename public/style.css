@@ -1,3 +1,10 @@
+body {
+
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
+	font-size: 14px;
+	
+}
+
 #content{
 	text-align: center;
 	margin:25px;
@@ -32,6 +39,12 @@ font-weight:bold;
 
 .imagewrapper {
     position: absolute;
+}
+
+.imagewrapper img {
+
+	max-height:120px;
+	max-width:120px;
 }
 
 

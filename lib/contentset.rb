@@ -19,7 +19,7 @@ module Scannerset
 
 	class Image < Content
 
-		def initialize(parent_url,url,title,alt,live_title,live_alt,row)
+		def initialize(parent_url,url,title,alt,live_title,live_alt,row,urlpath)
 			@url=url
 			@parent_url=parent_url
 			@alt=alt
@@ -27,6 +27,7 @@ module Scannerset
 			@live_title=live_title
 			@live_alt=live_alt
 			@row=row
+			@urlpath=urlpath
 		end
 
 		def display
@@ -36,13 +37,13 @@ module Scannerset
 			return "<div class='imagerow'>
 			<div class='imagewrapper'>
 			<a href='#{@url}' target='_blank'>
-			<img src='#{@url}' width='120px'></a>
-			</div>
+			<img src='#{@url}'></a></div>
 			<div class='metablock'><hr>
 			<a href='#{@@content}' target='_blank'>
 			<b>Row #{@row}</b></a>
 			 | <a href='#{@parent_url}' target='_blank'>
-			#{@parent_url}</a><br>
+			#{@parent_url}</a> | 
+			#{@urlpath}<br>
 			<b>Title: </b>#{@title}<br>
 			<b>Live Title:</b> #{@live_title}<br>
 			<b>Alt:</b> #{@alt}<br>
