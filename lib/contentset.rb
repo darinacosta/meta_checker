@@ -1,6 +1,6 @@
 module Scannerset
 
-	class Content
+	class Content < Scanner 
 
 		def match?(live,exp)
 				if live.strip==exp.strip && live.strip!=""
@@ -19,14 +19,14 @@ module Scannerset
 
 	class Image < Content
 
-		def initialize(parent_url,url,title,alt,live_title,live_alt,content_number)
+		def initialize(parent_url,url,title,alt,live_title,live_alt,row)
 			@url=url
 			@parent_url=parent_url
 			@alt=alt
 			@title=title
 			@live_title=live_title
 			@live_alt=live_alt
-			@content_number=content_number
+			@row=row
 		end
 
 		def display
@@ -35,11 +35,14 @@ module Scannerset
 
 			return "<div class='imagerow'>
 			<div class='imagewrapper'>
-			<img src='#{@url}' width='120px'>
+			<a href='#{@url}' target='_blank'>
+			<img src='#{@url}' width='120px'></a>
 			</div>
-			<div class='metablock'>
-			<b>Content #{@content_number}: </b>#{@url}<br>
-			<b>Parent: </b><a href='#{@parent_url}' target='_blank'>#{@parent_url}</a><br>
+			<div class='metablock'><hr>
+			<a href='#{@@content}' target='_blank'>
+			<b>Row #{@row}</b></a>
+			 | <a href='#{@parent_url}' target='_blank'>
+			#{@parent_url}</a><br>
 			<b>Title: </b>#{@title}<br>
 			<b>Live Title:</b> #{@live_title}<br>
 			<b>Alt:</b> #{@alt}<br>
