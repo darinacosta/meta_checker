@@ -23,5 +23,9 @@ end
 post '/form' do
   input=params[:URL1]
   @meta=Scannerset::Scanner.detect(input).pulldata(input)
-  erb :output
+  if @meta.empty?
+  	erb :empty
+  else
+  	erb :output
+  end
 end

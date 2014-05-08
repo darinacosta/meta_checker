@@ -103,3 +103,11 @@ td.border_bottom {
 a {
 	text-decoration: none;
 }
+
+a:visited{
+  color:blue;
+}
+
+td.left{
+	text-align:right;
+}
