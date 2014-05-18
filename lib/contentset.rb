@@ -1,39 +1,36 @@
 module Scannerset
 
 	class Content  
-
-		def match?(live,exp)
-				if live.strip==exp.strip && live.strip!=""
-					live="<span style='color:green;'>#{live}</span>"
-				elsif live.strip==""
-					live="<i>Empty.</i>"
-				elsif !(live.strip==exp.strip) && !(live.strip=="")
-					live="<span style='color:red;'>#{live}</span>"
-				end
-				return live
+		def match?(live, exp)
+			if live.strip == exp.strip && live.strip != ""
+				live = "<span style='color:green;'>#{live}</span>"
+			elsif live.strip == ""
+				live = "<i>Empty.</i>"
+			elsif !(live.strip==exp.strip) && !(live.strip=="")
+				live = "<span style='color:red;'>#{live}</span>"
 			end
-
+			return live
 		end
+	end
 
 
 
 	class Image < Content
-
-		def initialize(meta,row,image_source,content)
-			@url=meta[:image_url]
-			@parent_url=meta[:page_url]
-			@alt=meta[:alt][:requested]
-			@title=meta[:title][:requested]
-			@live_title=meta[:title][:live]
-			@live_alt=meta[:alt][:live]
-			@row=row
-			@image_source=image_source
-			@content=content
+		def initialize(meta, row, image_source,content)
+			@url = meta[:image_url]
+			@parent_url = meta[:page_url]
+			@alt = meta[:alt][:requested]
+			@title = meta[:title][:requested]
+			@live_title = meta[:title][:live]
+			@live_alt = meta[:alt][:live]
+			@row = row
+			@image_source = image_source
+			@content = content
 		end
 
 		def display
-			@live_title=match?(@live_title,@title)
-			@live_alt=match?(@live_alt,@alt)
+			@live_title = match?(@live_title,@title)
+			@live_alt = match?(@live_alt,@alt)
 
 			return "<div class='imagerow'>
 			<div class='imagewrapper'>
@@ -60,25 +57,22 @@ module Scannerset
 			</div>
 			</div>"
 		end
-
 	end
 
 
-
 	class Word < Content
-
-		def initialize(meta,count)
-			@url=meta[:page_url]
-			@live_title=meta[:title][:live]
-			@live_description=meta[:description][:live]
-			@title=meta[:title][:requested]
-			@description=meta[:description][:requested]
-			@count=count
+		def initialize(meta, count)
+			@url = meta[:page_url]
+			@live_title = meta[:title][:live]
+			@live_description = meta[:description][:live]
+			@title = meta[:title][:requested]
+			@description = meta[:description][:requested]
+			@count = count
 		end
 
 		def display
-			@live_title=match?(@live_title,@title)
-			@live_description=match?(@live_description,@description)
+			@live_title = match?(@live_title,@title)
+			@live_description = match?(@live_description,@description)
 
 			return "<b>Content #{@count}: </b><a href='#{@url}' 
 			target='_blank'>#{@url}</a><br>
@@ -87,7 +81,6 @@ module Scannerset
 			<b>Expected Description: </b>#{@description}<br>
 			<b>Live Description: </b>#{@live_description}<br><hr>"
 		end
-
 	end
 
 end
