@@ -6,7 +6,7 @@ module Scannerset
 				live = "<span style='color:green;'>#{live}</span>"
 			elsif live.strip == ""
 				live = "<i>Empty.</i>"
-			elsif !(live.strip==exp.strip) && !(live.strip=="")
+			elsif !(live.strip == exp.strip) && !(live.strip == "")
 				live = "<span style='color:red;'>#{live}</span>"
 			end
 			return live
@@ -14,8 +14,9 @@ module Scannerset
 	end
 
 
-
 	class Image < Content
+		attr_reader :url, :parent_url, :alt, :title, :live_title, :live_alt, :row, :image_source, :content
+
 		def initialize(meta, row, image_source,content)
 			@url = meta[:image_url]
 			@parent_url = meta[:page_url]
@@ -29,28 +30,28 @@ module Scannerset
 		end
 
 		def display
-			@live_title = match?(@live_title,@title)
-			@live_alt = match?(@live_alt,@alt)
+			live_title_compared = match?(live_title, title)
+			live_alt_compared = match?(live_alt, alt)
 
 			return "<div class='imagerow'>
 			<div class='imagewrapper'>
-			<a href='#{@url}' target='_blank'>
-			<img src='#{@url}'></a></div>
+			<a href='#{url}' target='_blank'>
+			<img src='#{url}'></a></div>
 			<div class='metablock'><hr>
-			<a href='#{@content}' target='_blank'>
-			<b>Row #{@row}</b></a>
-			 | <a href='#{@parent_url}' target='_blank'>
-			#{@parent_url}</a> | 
-			#{@image_source}<br>
+			<a href='#{content}' target='_blank'>
+			<b>Row #{row}</b></a>
+			 | <a href='#{parent_url}' target='_blank'>
+			#{parent_url}</a> | 
+			#{image_source}<br>
 			<table>
 			<tr>
-			<td class='left'><b>Title:</b></td><td>#{@title}</td>
+			<td class='left'><b>Title:</b></td><td>#{title}</td>
 			</tr><tr>
-			<td class='left'><b>Live:</b></td><td>#{@live_title}</td>
+			<td class='left'><b>Live:</b></td><td>#{live_title_compared}</td>
 			</tr><tr>
-			<td class='left'><b>Alt:</b></td><td>#{@alt}</td>
+			<td class='left'><b>Alt:</b></td><td>#{alt}</td>
 			</tr><tr>
-			<td class='left'><b>Live:</b></td><td>#{@live_alt}<br></td>
+			<td class='left'><b>Live:</b></td><td>#{live_alt_compared}<br></td>
 			</tr>
 			</table>
 			<hr><br>

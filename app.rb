@@ -15,7 +15,7 @@ Session = GoogleDrive.login(ENV['GOOGLE_USER'], ENV['GOOGLE_PASS'])
 require_relative 'lib/scanner.rb'
 require_relative 'lib/image_scanner.rb'
 require_relative 'lib/content_scanner.rb'
-require_relative 'lib/contentset.rb'
+require_relative 'lib/content_set.rb'
 
 #Paths
 get '/' do
