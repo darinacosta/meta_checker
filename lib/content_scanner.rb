@@ -1,7 +1,8 @@
 module Scannerset
 
   class ContentScanner < Scanner
-    
+  #Since we are soon changing the way we store content, I'm no longer improving this class 
+  #and will be focuing exlusively on the ImageScanner.  
     def pull_data(content)
       content_item = content.scan(/(URL:.+?)(?:Content|CONTENT|CONT|-{3,}|On-Page)/m)
       entries = Array.new
@@ -14,19 +15,21 @@ module Scannerset
           if page_url !~ /^http/
             page_url = "http://#{page_url}"
           end    
-          page = pull_page(page_url)
+          page = pull_page_content(page_url)
           live_title = page.css("title").text
           live_description = page.css("meta[@name$='escription']/@content").text
           requested_title = /Page.Title.+?Tag\):(.*$)/.match(c)
           requested_description = /Page.Description.+?Description\):(.*$)/.match(c)
-          meta= { :page_url => page_url,
-                  :title => { :live => live_title,
-                              :requested => requested_title[1]
-                              },
-                  :description => { :live => live_description,
-                                   :requested => requested_description[1]
-                                  }
-                }
+          meta= { :page_url    => page_url,
+                  :title       => { 
+                    :live      => live_title,
+                    :requested => requested_title[1]
+                  },
+                  :description => { 
+                    :live      => live_description,
+                    :requested => requested_description[1]
+                  }
+          }
             entries.push(Word.new(meta, count))
         end
       end

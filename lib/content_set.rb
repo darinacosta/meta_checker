@@ -15,9 +15,9 @@ module Scannerset
 
 
 	class Image < Content
-		attr_reader :url, :parent_url, :alt, :title, :live_title, :live_alt, :row, :image_source, :content
+		attr_reader :url, :parent_url, :alt, :title, :live_title, :live_alt, :row, :image_file_name, :spreadsheet_url
 
-		def initialize(meta, row, image_source,content)
+		def initialize(meta, row, image_file_name, spreadsheet_url)
 			@url = meta[:image_url]
 			@parent_url = meta[:page_url]
 			@alt = meta[:alt][:requested]
@@ -25,8 +25,8 @@ module Scannerset
 			@live_title = meta[:title][:live]
 			@live_alt = meta[:alt][:live]
 			@row = row
-			@image_source = image_source
-			@content = content
+			@image_file_name = image_file_name
+			@spreadsheet_url = spreadsheet_url
 		end
 
 		def display
@@ -38,11 +38,11 @@ module Scannerset
 			<a href='#{url}' target='_blank'>
 			<img src='#{url}'></a></div>
 			<div class='metablock'><hr>
-			<a href='#{content}' target='_blank'>
+			<a href='#{spreadsheet_url}' target='_blank'>
 			<b>Row #{row}</b></a>
 			 | <a href='#{parent_url}' target='_blank'>
 			#{parent_url}</a> | 
-			#{image_source}<br>
+			#{image_file_name}<br>
 			<table>
 			<tr>
 			<td class='left'><b>Title:</b></td><td>#{title}</td>

@@ -23,8 +23,8 @@ get '/' do
 end
 
 post '/form' do
-  input=params[:URL1]
-  @meta=Scannerset::Scanner.detect(input).pull_data(input)
+  user_input=params[:URL1]
+  @meta=Scannerset::Scanner.detect(user_input).pull_data(user_input)
   if @meta.empty?
   	erb :empty
   else
