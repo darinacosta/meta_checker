@@ -30,7 +30,7 @@ module Scannerset
                     :requested => requested_description[1]
                   }
           }
-            entries.push(Word.new(meta, count))
+            entries.push(WordProfile.new(meta, count))
         end
       end
       return entries

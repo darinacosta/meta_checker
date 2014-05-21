@@ -1,6 +1,6 @@
 module Scannerset
 
-	class Content  
+	class ContentProfile  
 		def match?(live, exp)
 			if live.strip == exp.strip && live.strip != ""
 				live = "<span style='color:green;'>#{live}</span>"
@@ -14,18 +14,18 @@ module Scannerset
 	end
 
 
-	class Image < Content
+	class ImageProfile < ContentProfile
 		attr_reader :url, :parent_url, :alt, :title, :live_title, :live_alt, :row, :image_file_name, :spreadsheet_url
 
-		def initialize(meta, row, image_file_name, spreadsheet_url)
-			@url = meta[:image_url]
-			@parent_url = meta[:page_url]
-			@alt = meta[:alt][:requested]
-			@title = meta[:title][:requested]
-			@live_title = meta[:title][:live]
-			@live_alt = meta[:alt][:live]
+		def initialize(compiled_data, row, spreadsheet_url)
+			@url = compiled_data[:image_url]
+			@parent_url = compiled_data[:page_url]
+			@alt = compiled_data[:alt][:requested]
+			@title = compiled_data[:title][:requested]
+			@live_title = compiled_data[:title][:live]
+			@live_alt = compiled_data[:alt][:live]
+			@image_file_name = compiled_data[:image_file_name]
 			@row = row
-			@image_file_name = image_file_name
 			@spreadsheet_url = spreadsheet_url
 		end
 
@@ -61,7 +61,7 @@ module Scannerset
 	end
 
 
-	class Word < Content
+	class WordProfile < ContentProfile
 		def initialize(meta, count)
 			@url = meta[:page_url]
 			@live_title = meta[:title][:live]
@@ -72,8 +72,8 @@ module Scannerset
 		end
 
 		def display
-			@live_title = match?(@live_title,@title)
-			@live_description = match?(@live_description,@description)
+			@live_title = match?(@live_title, @title)
+			@live_description = match?(@live_description, @description)
 
 			return "<b>Content #{@count}: </b><a href='#{@url}' 
 			target='_blank'>#{@url}</a><br>

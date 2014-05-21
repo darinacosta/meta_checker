@@ -12,7 +12,7 @@ module Scannerset
 		def self.detect(user_input)
 			if /\/spreadsheet\// =~ user_input && user_input.length < 200
 				return ImageScanner.new(user_input)
-			else 
+			else
 				return ContentScanner.new(user_input)
 			end
 		end
