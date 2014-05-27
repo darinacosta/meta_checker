@@ -111,3 +111,7 @@ a:visited{
 td.left{
 	text-align:right;
 }
+
+form#back{
+	text-align:center;
+}
