@@ -34,7 +34,7 @@ module Scannerset
 			live_alt_compared = match?(live_alt, alt)
 
 			return "<div class='imagerow'>
-			<div class='imagewrapper'>
+			<div class='imagewrapper'> 
 			<a href='#{url}' target='_blank'>
 			<img src='#{url}'></a></div>
 			<div class='metablock'><hr>
