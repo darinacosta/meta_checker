@@ -17,7 +17,6 @@ require_relative 'lib/image_scanner.rb'
 require_relative 'lib/content_scanner.rb'
 require_relative 'lib/content_set.rb'
 
-#Paths
 class MetaChecker < Sinatra::Base
   get '/' do
     erb :form
