@@ -24,6 +24,15 @@ module Scannerset
 		rescue Mechanize::ResponseCodeError => e  
 			page_content = "error"
 			return page_content
+		end
+
+		def assemble_page_content_hash(urls)
+		  page_content_hash = {}
+		    urls.each do |url|
+		      page_content = pull_page_content(url)
+		      page_content_hash[url] = page_content
+		    end
+		  return page_content_hash
 		end		
 	end
 
