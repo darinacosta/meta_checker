@@ -21,8 +21,9 @@ module Scannerset
 			#html = @agent.get(url).body
 			page_content = Nokogiri::HTML(open(url), nil, 'UTF-8')
 			return page_content
-		rescue Mechanize::ResponseCodeError => e  
+		rescue OpenURI::HTTPError  
 			page_content = "error"
+			puts "Error detected for the following URL: #{url}."
 			return page_content
 		end
 

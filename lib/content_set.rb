@@ -63,24 +63,32 @@ module Scannerset
 
 	class WordProfile < ContentProfile
 		def initialize(meta, count)
-			@url = meta[:page_url]
-			@live_title = meta[:title][:live]
-			@live_description = meta[:description][:live]
-			@title = meta[:title][:requested]
-			@description = meta[:description][:requested]
 			@count = count
+			if meta.kind_of?(Hash)
+				@url = meta[:page_url]
+				@live_title = meta[:title][:live]
+				@live_description = meta[:description][:live]
+				@title = meta[:title][:requested]
+				@description = meta[:description][:requested]
+			else 
+				@error = meta
+			end
 		end
 
 		def display
-			@live_title = match?(@live_title, @title)
-			@live_description = match?(@live_description, @description)
+			if @error 
+				return "<b>Content #{@count}:</b> #{@error}<br><hr>"
+			else 
+				@live_title = match?(@live_title, @title)
+				@live_description = match?(@live_description, @description)
 
-			return "<b>Content #{@count}: </b><a href='#{@url}' 
-			target='_blank'>#{@url}</a><br>
-			<b>Expected Title: </b>#{@title}<br>
-			<b>Live Title: </b>#{@live_title}<br><br>
-			<b>Expected Description: </b>#{@description}<br>
-			<b>Live Description: </b>#{@live_description}<br><hr>"
+				return "<b>Content #{@count}: </b><a href='#{@url}' 
+				target='_blank'>#{@url}</a><br>
+				<b>Expected Title: </b>#{@title}<br>
+				<b>Live Title: </b>#{@live_title}<br><br>
+				<b>Expected Description: </b>#{@description}<br>
+				<b>Live Description: </b>#{@live_description}<br><hr>"
+			end
 		end
 	end
 
