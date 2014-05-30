@@ -10,7 +10,7 @@ module Scannerset
       content_item.each do |co|
         co.each do |c|
           count += 1
-          page_url=/URL:[[:space:]](.*$)/.match(c)
+          page_url=/URL:[[:space:]]*(.*$)/.match(c)
           page_url=page_url[1]
           if page_url !~ /^http/
             page_url = "http://#{page_url}"
