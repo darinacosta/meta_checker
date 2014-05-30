@@ -34,16 +34,22 @@ module Scannerset
         live_title = page.css("title").text
         live_description = page.css("meta[@name$='escription']/@content").text
         requested_title = /Page.Title.+?Tag\):(.*$)/.match(content_item)
+        if requested_title.nil?
+          requested_title = [nil, nil]
+        end
         requested_description = /Page.Description.+?Description\):(.*$)/.match(content_item)
-        meta= { :page_url    => page_url,
-                :title       => { 
-                  :live      => live_title,
-                  :requested => requested_title[1]
-                },
-                :description => { 
-                  :live      => live_description,
-                  :requested => requested_description[1]
-                }
+        if requested_description.nil?
+          requested_description = [nil, nil]
+        end
+        meta = { :page_url    => page_url,
+                 :title       => { 
+                   :live      => live_title,
+                   :requested => requested_title[1]
+                 },
+                 :description => { 
+                   :live      => live_description,
+                   :requested => requested_description[1]
+                 }
         }
       end
       return meta
