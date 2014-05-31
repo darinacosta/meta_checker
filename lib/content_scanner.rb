@@ -33,7 +33,7 @@ module Scannerset
         meta = return_error(page_url)
       else
         live_title = page.css("title").text
-        live_description = page.xpath("//meta[make_xpath_nodeset_case_insensitive(@name, 'Description')]/@content", XpathFunctions.new).text
+        live_description = page.xpath("//meta[make_xpath_nodeset_case_insensitive(@name, 'description')]/@content", XpathFunctions.new).text
         requested_title = /Page.Title.+?Tag\):(.*$)/.match(content_item)
         if requested_title.nil?
           requested_title = [nil, nil]
