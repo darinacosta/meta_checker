@@ -1,3 +1,5 @@
+require_relative "./scanner.rb"
+
  module Scannerset
  
   class ImageScanner < Scanner

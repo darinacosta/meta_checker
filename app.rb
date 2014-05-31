@@ -1,3 +1,7 @@
+def require_directory(folder)
+  Dir["#{folder}/*"].each {|file| require_relative file }
+end
+
 require 'sinatra'
 require 'mechanize'
 require 'google_drive'
@@ -12,10 +16,8 @@ end
 
 Session = GoogleDrive.login(ENV['GOOGLE_USER'], ENV['GOOGLE_PASS'])
 
-require_relative 'lib/scanner.rb'
-require_relative 'lib/image_scanner.rb'
-require_relative 'lib/content_scanner.rb'
-require_relative 'lib/content_set.rb'
+require_directory('lib')
+require_directory('helpers')
 
 class MetaChecker < Sinatra::Base
   get '/' do
