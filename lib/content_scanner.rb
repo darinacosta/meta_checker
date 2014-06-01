@@ -1,4 +1,4 @@
-require_relative '../requirements.rb'
+require_relative "./scanner.rb"
 
 module Scannerset
   class ContentScanner < Scanner  
@@ -25,38 +25,44 @@ module Scannerset
     end
     
     def assemble_page_content_hash(page_url, content_item)
-      if page_url !~ /^http/
-        page_url = "http://#{page_url}"
-      end    
+      page_url = "http://#{page_url}" if page_url !~ /^http/
       page = pull_page_content(page_url)
       if page == "error"
-        meta = return_error(page_url)
+        meta = return_error_view(page_url)
       else
-        live_title = page.css("title").text
-        live_description = page.xpath("//meta[make_xpath_nodeset_case_insensitive(@name, 'description')]/@content", XpathFunctions.new).text
-        requested_title = /Page.Title.+?Tag\):(.*$)/.match(content_item)
-        if requested_title.nil?
-          requested_title = [nil, nil]
-        end
-        requested_description = /Page.Description.+?Description\):(.*$)/.match(content_item)
-        if requested_description.nil?
-          requested_description = [nil, nil]
-        end
-        meta = { :page_url    => page_url,
-                 :title       => { 
-                   :live      => live_title,
-                   :requested => requested_title[1]
-                 },
-                 :description => { 
-                   :live      => live_description,
-                   :requested => requested_description[1]
+        live_meta = scrape_live_meta(page)
+        requested_meta = scrape_requested_meta(content_item)
+        meta = { page_url:              page_url,
+                 live_title:            live_meta[:live_title],
+                 requested_title:       requested_meta[:requested_title]
+                 live_description:      live_meta[:live_description],
+                 requested_description: requested_meta[:requested_description]
                  }
-        }
       end
       return meta
     end
 
-    def return_error(page_url)
+    def scrape_live_meta(page)
+      live_title = page.css("title").text
+      live_description = page.xpath("//meta[make_xpath_nodeset_case_insensitive(@name, 'description')]/@content", XpathFunctions.new).text
+      return {
+        live_title:       live_title,
+        live_description: live_description
+      }
+    end
+
+    def scrape_requested_meta(content)
+      requested_title_match = /Page.Title.+?Tag\):(.*$)/.match(content)
+      requested_title = requested_title_match[1]
+      requested_description_match = /Page.Description.+?Description\):(.*$)/.match(content)
+      requested_description = requested_description_match[1]
+      return {
+        requested_title:       requested_title,
+        requested_description: requested_description
+      }
+    end
+
+    def return_error_view(page_url)
       "<a href='#{page_url}' target='_blank'>#{page_url}</a> <span style='color: grey'>does not exist. Please ensure that the URL is formatted correctly.</span>"
     end
   end
