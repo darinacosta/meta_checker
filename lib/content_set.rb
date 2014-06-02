@@ -2,6 +2,7 @@ module Scannerset
 
 	class ContentProfile  
 		def match?(live, exp)
+			live = live.to_s
 			if exp.nil? 
 				exp = "<i><span style='color: grey'>The document provided does not request this content.</span></i>"
 				return exp
@@ -37,7 +38,7 @@ module Scannerset
 
 		def display
 			live_title_compared = match?(live_title, title)
-			live_alt_compared = match?(live_alt, alt)
+			live_alt_compared = match?(live_alt.to_s, alt)
 
 			return "<div class='imagerow'>
 			<div class='imagewrapper'> 
@@ -68,7 +69,7 @@ module Scannerset
 
 
 	class WordProfile < ContentProfile
-		attr_reader :url, :live_title, :live_description, :requested_title, :requested_description, :count
+		attr_accessor :url, :live_title, :live_description, :requested_title, :requested_description, :count
 
 		def initialize(meta, count)
 			@count = count
@@ -88,8 +89,8 @@ module Scannerset
 			if @error 
 				return "<b>Content #{@count}:</b> #{@error}<br><hr>"
 			else 
-				live_title = match?(live_title, requested_title)
-				live_description = match?(live_description, requested_description)
+				live_title = match?(@live_title, requested_title)
+				live_description = match?(@live_description, requested_description)
 
 				return "<b>Content #{count}: </b><a href='#{url}' 
 				target='_blank'>#{url}</a><br>
