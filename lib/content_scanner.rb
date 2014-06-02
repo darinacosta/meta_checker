@@ -34,7 +34,7 @@ module Scannerset
         requested_meta = scrape_requested_meta(content_item)
         meta = { page_url:              page_url,
                  live_title:            live_meta[:live_title],
-                 requested_title:       requested_meta[:requested_title]
+                 requested_title:       requested_meta[:requested_title],
                  live_description:      live_meta[:live_description],
                  requested_description: requested_meta[:requested_description]
                  }
