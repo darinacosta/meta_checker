@@ -2,10 +2,11 @@ module Scannerset
 
 	class ContentProfile  
 		def match?(live, exp)
-			if exp.nil?
-				exp = "<i>The document provided does not request this content.</i>"
+			if exp.nil? 
+				exp = "<i><span style='color: grey'>The document provided does not request this content.</span></i>"
 				return exp
 			else
+				live = "<i>None</i>." if live.nil?
 				if live.strip == exp.strip && live.strip != "" 
 					live = "<span style='color:green;'>#{live}</span>"
 				elsif live.strip == ""
@@ -67,7 +68,7 @@ module Scannerset
 
 
 	class WordProfile < ContentProfile
-		attr_reader :url, :live_title, :live_description, :requested_title, :requested_description
+		attr_reader :url, :live_title, :live_description, :requested_title, :requested_description, :count
 
 		def initialize(meta, count)
 			@count = count
@@ -77,6 +78,7 @@ module Scannerset
 				@live_description = meta[:live_description]
 				@requested_title = meta[:requested_title]
 				@requested_description = meta[:requested_description]
+				@count = count
 			else 
 				@error = meta
 			end

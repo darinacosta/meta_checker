@@ -53,9 +53,9 @@ module Scannerset
 
     def scrape_requested_meta(content)
       requested_title_match = /Page.Title.+?Tag\):(.*$)/.match(content)
-      requested_title = requested_title_match[1]
+      requested_title = requested_title_match[1] if requested_title_match != nil
       requested_description_match = /Page.Description.+?Description\):(.*$)/.match(content)
-      requested_description = requested_description_match[1]
+      requested_description = requested_description_match[1] if requested_description_match != nil
       return {
         requested_title:       requested_title,
         requested_description: requested_description
