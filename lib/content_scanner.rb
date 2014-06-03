@@ -3,7 +3,7 @@ require_relative "./scanner.rb"
 module Scannerset
   class ContentScanner < Scanner  
     def pull_data(content)
-      unsorted_content_collection = content.scan(/(URL:.+?)(?:Content|CONTENT|CONT|-{3,}|On-Page)/m)
+      unsorted_content_collection = content.scan(/(URL:.+?)(?:Content|CONTENT|CONT|-{3,}|On-Page|\Z)/m)
       entries = Array.new
       count = 0
       unsorted_content_collection.each do |unsorted_content_item_set|
@@ -54,7 +54,8 @@ module Scannerset
     def scrape_requested_meta(content)
       requested_title_match = /Page.Title.+?Tag\):(.*$)/.match(content)
       requested_title = requested_title_match[1] if requested_title_match != nil
-      requested_description_match = /Page.Description.+?Description\):(.*$)/.match(content)
+      requested_description_match = /Page.Description.+?Description\):(.*)/.match(content)
+      puts requested_description_match
       requested_description = requested_description_match[1] if requested_description_match != nil
       return {
         requested_title:       requested_title,
