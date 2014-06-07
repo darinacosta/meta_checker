@@ -2,19 +2,27 @@ require_relative "./scanner.rb"
 
 module Scannerset
   class ContentScanner < Scanner  
+<<<<<<< HEAD
     def pull_data(content)
       unsorted_content_collection = content.scan(/(URL:.+?)(?:Cont(?:ent)? ?\d|CONT(?:ENT)? ?\d|(?:K|k)eyword:|-{3,}|On-Page|\Z)/m)
       entries = Array.new
       count = 0
+=======
+    def pull_requested_data(content)
+      unsorted_content_collection = content.scan(/(URL:.+?)(?:Content|CONTENT|CONT|-{3,}|On-Page|\Z)/m)
+      content_array = Array.new
+      content_order_id = 0
+>>>>>>> adding-ajax-functionality
       unsorted_content_collection.each do |unsorted_content_item_set|
         unsorted_content_item_set.each do |unsorted_content_item|
-          count += 1
+          content_order_id += 1
           page_url = scrape_page_url(unsorted_content_item)
           meta = assemble_page_content_hash(page_url, unsorted_content_item)
-          entries.push(WordProfile.new(meta, count))
+          meta[:id] = content_order_id
+          content_array.push(meta)
         end
       end
-      return entries
+      content_array.to_json
     end
 
     def scrape_page_url(raw_content)
@@ -25,21 +33,16 @@ module Scannerset
     end
     
     def assemble_page_content_hash(page_url, content_item)
-      page_url = "http://#{page_url}" if page_url !~ /^http/
       page = pull_page_content(page_url)
       if page == "error"
         meta = return_error_view(page_url)
       else
-        live_meta = scrape_live_meta(page)
         requested_meta = scrape_requested_meta(content_item)
-        meta = { page_url:              page_url,
-                 live_title:            live_meta[:live_title],
-                 requested_title:       requested_meta[:requested_title],
-                 live_description:      live_meta[:live_description],
-                 requested_description: requested_meta[:requested_description]
-                 }
+        { page_url:              page_url,
+          requested_title:       requested_meta[:requested_title],
+          requested_description: requested_meta[:requested_description]
+        }
       end
-      return meta
     end
 
     def scrape_live_meta(page)
@@ -55,7 +58,6 @@ module Scannerset
       requested_title_match = /Page.Title.+?Tag\):(.*$)/.match(content)
       requested_title = requested_title_match[1] if requested_title_match != nil
       requested_description_match = /Page.Description.+?Description\):(.*)/.match(content)
-      puts requested_description_match
       requested_description = requested_description_match[1] if requested_description_match != nil
       return {
         requested_title:       requested_title,

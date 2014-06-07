@@ -6,6 +6,8 @@ require 'sinatra'
 require 'mechanize'
 require 'google_drive'
 require 'open-uri'
+require 'json'
+require "base64"
 
 configure :development do
   require 'pp'

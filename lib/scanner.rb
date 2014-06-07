@@ -18,9 +18,10 @@ module Scannerset
 			end
 		end
 
-		def pull_page_content(url)
+		def pull_page_content(page_url)
 			#html = @agent.get(url).body
-			page_content = Nokogiri::HTML(open(url), nil, 'UTF-8')
+			page_url = "http://#{page_url}" if page_url !~ /^http/
+			page_content = Nokogiri::HTML(open(page_url), nil, 'UTF-8')
 			return page_content
 		rescue OpenURI::HTTPError, URI::InvalidURIError  
 			page_content = "error"
