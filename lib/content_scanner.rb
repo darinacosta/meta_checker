@@ -7,7 +7,6 @@ module Scannerset
       unsorted_content_collection = content.scan(/(URL:.+?)(?:Cont(?:ent)? ?\d|CONT(?:ENT)? ?\d|(?:K|k)eyword:|-{3,}|On-Page|\Z)/m)
       content_array = Array.new
       content_order_id = 0
-      adding-ajax-functionality
       unsorted_content_collection.each do |unsorted_content_item_set|
         unsorted_content_item_set.each do |unsorted_content_item|
           content_order_id += 1
