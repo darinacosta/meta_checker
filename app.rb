@@ -20,12 +20,6 @@ class MetaChecker < Sinatra::Base
   end
 
   get '/live_meta/:id/:url/:requested_title/:requested_description' do
-    #javascript funtion "url encode"
-    #for ruby theres a "CGI.decode" or "CGI.escape" package 
-    #Or use base64 decode and encode(<---yes this)
-    #be sure to test URLs that contain GET parameters 
-    #look for chrome plugin to test gets and posts 
-    #look into Javascript templates to generate view
     id = id
     url = Base64.decode64(params[:url]).to_s
     requested_title = params[:requested_title]
