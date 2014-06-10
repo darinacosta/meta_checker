@@ -5,7 +5,7 @@ module Scannerset
 	class Scanner
 		attr_reader :user_input
 
-		def initialize(user_input)
+		def initialize(user_input = nil)
 			@user_input = user_input 
 			@agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Safari" }
 		end
@@ -25,7 +25,7 @@ module Scannerset
 			return page_content
 		rescue OpenURI::HTTPError, URI::InvalidURIError  
 			page_content = "error"
-			puts "Error detected for the following URL: #{url}."
+			puts "Error detected for the following URL: #{page_url}."
 			return page_content
 		end
 

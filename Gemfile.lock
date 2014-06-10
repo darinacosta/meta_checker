@@ -16,11 +16,16 @@ GEM
       celluloid (>= 0.15.0)
       nio4r (>= 0.5.0)
     coderay (1.1.0)
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.7.0)
     domain_name (0.5.18)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (0.11.1)
       dotenv-deployment (~> 0.0.2)
     dotenv-deployment (0.0.2)
+    execjs (2.2.0)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.3)
@@ -37,6 +42,7 @@ GEM
       thor (>= 0.18.1)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
+    json (1.8.1)
     jwt (0.1.11)
       multi_json (>= 1.5)
     listen (2.7.3)
@@ -102,10 +108,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  coffee-script
   dotenv
   google_drive
   guard
   guard-shotgun!
+  json
   mechanize
   pry
   sinatra (~> 1.4.5)

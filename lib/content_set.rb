@@ -74,7 +74,7 @@ module Scannerset
 		def initialize(meta, count)
 			@count = count
 			if meta.kind_of?(Hash)
-				@url = meta[:page_url]
+				@url = meta[:url]
 				@live_title = meta[:live_title]
 				@live_description = meta[:live_description]
 				@requested_title = meta[:requested_title]

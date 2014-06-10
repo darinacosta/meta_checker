@@ -3,7 +3,7 @@ require_relative "./scanner.rb"
 module Scannerset
   class ContentScanner < Scanner  
 
-    def pull_requested_data(content)
+    def pull_data(content)
       unsorted_content_collection = content.scan(/(URL:.+?)(?:Cont(?:ent)? ?\d|CONT(?:ENT)? ?\d|(?:K|k)eyword:|-{3,}|On-Page|\Z)/m)
       content_array = Array.new
       content_order_id = 0
@@ -12,7 +12,7 @@ module Scannerset
           content_order_id += 1
           page_url = scrape_page_url(unsorted_content_item)
           meta = assemble_page_content_hash(page_url, unsorted_content_item)
-          meta[:id] = content_order_id
+          meta[:id] = content_order_id 
           content_array.push(meta)
         end
       end
@@ -60,7 +60,10 @@ module Scannerset
     end
 
     def return_error_view(page_url)
-      "<a href='#{page_url}' target='_blank'>#{page_url}</a> <span style='color: grey'>does not exist. Please ensure that the URL is formatted correctly.</span>"
+      {
+        error_view: "<a href='#{page_url}' target='_blank'>#{page_url}</a><span style='color: grey'>
+        does not exist. Please ensure that the URL is formatted correctly.</span>"
+      }
     end
   end
 end

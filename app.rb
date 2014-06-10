@@ -11,7 +11,7 @@ class MetaChecker < Sinatra::Base
 
   post '/form' do
     user_input=params[:URL1]
-    @requested_meta = Scannerset::Scanner.detect(user_input).pull_requested_data(user_input)
+    @requested_meta = Scannerset::Scanner.detect(user_input).pull_data(user_input)
     if @requested_meta.empty?
     	"Empty"
     else
@@ -21,11 +21,11 @@ class MetaChecker < Sinatra::Base
 
   get '/live_meta/:id/:url/:requested_title/:requested_description' do
     id = id
-    url = Base64.decode64(params[:url]).to_s
-    requested_title = params[:requested_title]
-    requested_description = params[:requested_description]
+    url = params[:url].to_s.base64_url_decode
+    requested_title = params[:requested_title].to_s.base64_url_decode
+    requested_description = params[:requested_description].to_s.base64_url_decode
     id = params[:id]
-    content_scanner = Scannerset::ContentScanner.new('test')
+    content_scanner = Scannerset::ContentScanner.new
     live_page_content = content_scanner.pull_page_content(url)
     live_meta = content_scanner.scrape_live_meta(live_page_content)
     meta = {
@@ -36,7 +36,6 @@ class MetaChecker < Sinatra::Base
       requested_description: requested_description
     }
     word_profile = Scannerset::WordProfile.new(meta, id)
-    puts word_profile.display
     return word_profile.display
   end
 end

@@ -1,30 +1,5 @@
 <form id="back"><input type="button" value="Back" onclick="history.go(-1);return true;"></form>
-<script>
-
-  
-$(document).ready( function() {
-    var requested_meta_string = <%=@requested_meta.to_json%>
-    var requested_meta = $.parseJSON(requested_meta_string)
-    var requested_meta_length = requested_meta.length;
-
-    for (var i = 0; i < requested_meta_length; i++){
-
-      var div = $('<div />');
-      console.log(div);
-      $( "#meta_test" ).append(div);
-
-      var base64_url = btoa(requested_meta[i].page_url);
-      var requested_title = requested_meta[i].requested_title;
-      var requested_description = requested_meta[i].requested_description;
-      var id = requested_meta[i].id; 
-
-      $.get( "/live_meta/" + id + '/' + base64_url + '/' + requested_title + '/' + requested_description, function(entry_output){
-
-      div.append(entry_output);
-    });
-    }
-  });
-</script>
+<script src="js/meta_collector.js"></script>
 <div id="meta_test"></div>
 <form id="back"><input type="button" value="Back" onclick="history.go(-1);return true;"></form>
 

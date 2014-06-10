@@ -14,7 +14,7 @@ require_relative "./scanner.rb"
           entries.push(ImageProfile.new(compiled_data, row, spreadsheet_url))
         end
       end
-    return entries
+      return entries
     end
 
 
