@@ -16,4 +16,3 @@ class String
     Base64.decode64(url_decoded_variable)
   end
 end
-

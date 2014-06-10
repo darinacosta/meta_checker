@@ -16,7 +16,7 @@ module Scannerset
           content_array.push(meta)
         end
       end
-      content_array.to_json
+      content_array
     end
 
     def scrape_page_url(raw_content)
