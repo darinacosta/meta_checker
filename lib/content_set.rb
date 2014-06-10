@@ -1,3 +1,5 @@
+require 'json'
+
 module Scannerset
 
 	class ContentProfile  
@@ -87,17 +89,23 @@ module Scannerset
 
 		def display
 			if @error 
-				return "<b>Content #{@count}:</b> #{@error}<br><hr>"
+				{
+					id: @count,
+					html: "<b>Content #{@count}:</b> #{@error}<br><hr>"
+				}.to_json
 			else 
 				live_title = match?(@live_title, requested_title)
 				live_description = match?(@live_description, requested_description)
-
-				return "<b>Content #{count}: </b><a href='#{url}' 
-				target='_blank'>#{url}</a><br>
-				<b>Expected Title: </b>#{requested_title}<br>
-				<b>Live Title: </b>#{live_title}<br><br>
-				<b>Expected Description: </b>#{requested_description}<br>
-				<b>Live Description: </b>#{live_description}<br><hr>"
+		
+				{
+					id: @count,
+					html: "<b>Content #{count}: </b><a href='#{url}' 
+					target='_blank'>#{url}</a><br>
+					<b>Expected Title: </b>#{requested_title}<br>
+					<b>Live Title: </b>#{live_title}<br><br>
+					<b>Expected Description: </b>#{requested_description}<br>
+					<b>Live Description: </b>#{live_description}<br><hr>"
+				}.to_json
 			end
 		end
 	end
