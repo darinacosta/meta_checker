@@ -14,7 +14,8 @@ module Scannerset
 			if /\/spreadsheet\// =~ user_input && user_input.length < 200
 				return ImageScanner.new(user_input)
 			else
-				return ContentScanner.new(user_input)
+				sanitized_content = sanitize_content(user_input)
+				return ContentScanner.new(sanitized_content)
 			end
 		end
 

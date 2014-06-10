@@ -2,9 +2,8 @@ require_relative "./scanner.rb"
 
 module Scannerset
   class ContentScanner < Scanner  
-
     def pull_data(content)
-      unsorted_content_collection = content.scan(/(URL:.+?)(?:Cont(?:ent)? ?\d|CONT(?:ENT)? ?\d|(?:K|k)eyword:|-{3,}|On-Page|\Z)/m)
+      unsorted_content_collection = content.scan(/(URL:.+?)(?:Cont(?:ent)? ?\d|CONT(?:ENT)? ?\d|-{3,}|On-Page|\Z)/m)
       content_array = Array.new
       content_order_id = 0
       unsorted_content_collection.each do |unsorted_content_item_set|
@@ -40,8 +39,10 @@ module Scannerset
     end
 
     def scrape_live_meta(page)
-      live_title = page.css("title").text
-      live_description = page.xpath("//meta[make_xpath_nodeset_case_insensitive(@name, 'description')]/@content", XpathFunctions.new).text
+      live_title_raw = page.css("title").text
+      live_description_raw = page.xpath("//meta[make_xpath_nodeset_case_insensitive(@name, 'description')]/@content", XpathFunctions.new).text
+      live_title = sanitize_content(live_title_raw)
+      live_description = sanitize_content(live_description_raw)
       return {
         live_title:       live_title,
         live_description: live_description
@@ -51,7 +52,7 @@ module Scannerset
     def scrape_requested_meta(content)
       requested_title_match = /Page.Title.+?Tag\):(.*$)/.match(content)
       requested_title = requested_title_match[1] if requested_title_match != nil
-      requested_description_match = /Page.Description.+?Description\):(.*)/.match(content)
+      requested_description_match = /(?:Page|Meta)?.+?Description\)?:(.*)/.match(content)
       requested_description = requested_description_match[1] if requested_description_match != nil
       return {
         requested_title:       requested_title,
