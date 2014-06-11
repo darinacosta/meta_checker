@@ -75,38 +75,35 @@ module Scannerset
 
 		def initialize(meta, count)
 			@count = count
-			if meta.kind_of?(Hash)
-				@url = meta[:url]
-				@live_title = meta[:live_title]
-				@live_description = meta[:live_description]
-				@requested_title = meta[:requested_title]
-				@requested_description = meta[:requested_description]
-				@count = count
-			else 
-				@error = meta
-			end
+			@url = meta[:url]
+			@live_title = meta[:live_title]
+			@live_description = meta[:live_description]
+			@requested_title = meta[:requested_title]
+			@requested_description = meta[:requested_description]
+			@count = count
 		end
 
 		def display
-			if @error 
-				{
-					id: @count,
-					html: "<b>Content #{@count}:</b> #{@error}<br><hr>"
-				}.to_json
-			else 
-				live_title = match?(@live_title, requested_title)
-				live_description = match?(@live_description, requested_description)
-		
-				{
-					id: @count,
-					html: "<b>Content #{count}: </b><a href='#{url}' 
-					target='_blank'>#{url}</a><br>
-					<b>Expected Title: </b>#{requested_title}<br>
-					<b>Live Title: </b>#{live_title}<br><br>
-					<b>Expected Description: </b>#{requested_description}<br>
-					<b>Live Description: </b>#{live_description}<br><hr>"
-				}.to_json
-			end
+			live_title = match?(@live_title, requested_title)
+			live_description = match?(@live_description, requested_description)
+	
+			{
+				id: @count,
+				html: "<table>
+				<tr>
+				<td class='left'><b># #{count}:</b></td><td><a href='#{url}' 
+				target='_blank'>#{url}</a></td>
+				</tr><tr>
+				<td class='left'><b>Title:</b></td><td>#{requested_title}</td>
+				</tr><tr>
+				<td class='left'><b>Live:</b></td><td>#{live_title}</td>
+				</tr><tr>
+				<td class='left'><b>Descrip:</b></td><td>#{requested_description}</td>
+				</tr><tr>
+				<td class='left'><b>Live:</b></td><td>#{live_description}<br></td>
+				</tr>
+				</table><hr>"
+			}.to_json
 		end
 	end
 

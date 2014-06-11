@@ -1,4 +1,5 @@
 <form id="back"><input type="button" value="Back" onclick="history.go(-1);return true;"></form>
+<script>var requested_meta = <%= @requested_meta_json %></script>
 <script src="js/meta_collector.js"></script>
 <% @requested_meta.each do |requested_meta| %>
   <div id="meta_comparison_<%= requested_meta[:id] %>" class="meta_comparison"></div>

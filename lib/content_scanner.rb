@@ -28,14 +28,12 @@ module Scannerset
     def assemble_page_content_hash(page_url, content_item)
       page = pull_page_content(page_url)
       if page == "error"
-        meta = return_error_view(page_url)
+        requested_meta = return_error_view(page_url)
       else
         requested_meta = scrape_requested_meta(content_item)
-        { page_url:              page_url,
-          requested_title:       requested_meta[:requested_title],
-          requested_description: requested_meta[:requested_description]
-        }
       end
+      requested_meta[:page_url] = page_url
+      return requested_meta
     end
 
     def scrape_live_meta(page)
@@ -62,8 +60,7 @@ module Scannerset
 
     def return_error_view(page_url)
       {
-        error_view: "<a href='#{page_url}' target='_blank'>#{page_url}</a><span style='color: grey'>
-        does not exist. Please ensure that the URL is formatted correctly.</span>"
+        error_view: "<a href='#{page_url}' target='_blank'>#{page_url}</a><span style='color: grey'> does not exist. Please ensure that the URL is formatted correctly.</span>"
       }
     end
   end
