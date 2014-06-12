@@ -20,12 +20,12 @@ class MetaChecker < Sinatra::Base
     end
   end
 
-  get '/live_meta/:id/:url/:requested_title/:requested_description' do
-    id = id
-    url = params[:url].to_s.base64_url_decode
-    requested_title = params[:requested_title].to_s.base64_url_decode
-    requested_description = params[:requested_description].to_s.base64_url_decode
-    id = params[:id]
+  get '/live_meta' do
+    id = params[:id] #id does not need to be decoded
+    params.each { |key, value| params[key] = value.base64_url_decode }
+    url = params["base64_url_encoded"]
+    requested_title = params["requested_title_encoded"]
+    requested_description = params["requested_description_encoded"]
     content_scanner = Scannerset::ContentScanner.new
     live_page_content = content_scanner.pull_page_content(url)
     live_meta = content_scanner.scrape_live_meta(live_page_content)
