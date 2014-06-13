@@ -1,5 +1,5 @@
 <form id="back"><input type="button" value="Back" onclick="history.go(-1);return true;"></form>
-<%@meta.each {|x|%>
+<%@requested_meta.each {|x|%>
 <%=x.display%>
 <%}%>
 <form id="back"><input type="button" value="Back" onclick="history.go(-1);return true;"></form>
