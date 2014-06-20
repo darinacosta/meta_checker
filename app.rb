@@ -12,7 +12,6 @@ class MetaChecker < Sinatra::Base
   post '/form' do
     user_input=params[:URL1]
     @requested_meta = Scannerset::Scanner.detect(user_input).pull_data(user_input)
-    puts @requested_meta[0].class.name
     @requested_meta_json = @requested_meta.to_json
     if @requested_meta.empty?
     	"Empty"
