@@ -3,7 +3,7 @@ require_relative "./scanner.rb"
 module Scannerset
   class ContentScanner < Scanner  
     def pull_data(content)
-      unsorted_content_collection = content.scan(/(URL:.+?)(?:Cont(?:ent)? ?\d|\n\n.eyword:|CONT(?:ENT)? ?\d|-{3,}|On-Page|\Z)/m)
+      unsorted_content_collection = content.scan(/(URL:.+?)(?:Cont(?:ent)? ?\d|.eyword:|CONT(?:ENT)? ?\d|-{3,}|On-Page|\Z)/m)
       content_array = Array.new
       content_order_id = 0
       unsorted_content_collection.each do |unsorted_content_item_set|
@@ -19,7 +19,6 @@ module Scannerset
     end
 
     def scrape_page_url(raw_content)
-      page_url = /URL:[[:space:]]*(.*$)/.match(raw_content)
       page_url = /URL:[[:space:]]*(.*$)/.match(raw_content)
       page_url = page_url[1]
       return page_url
