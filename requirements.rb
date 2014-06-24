@@ -16,6 +16,7 @@ require 'mechanize'
 require 'google_drive'
 require 'json'
 require 'coffee-script'
+require 'open_uri_redirections'
 
 configure :development do
   require 'pp'

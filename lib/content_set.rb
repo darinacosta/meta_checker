@@ -5,20 +5,9 @@ module Scannerset
 	class ContentProfile  
 		def match?(live, exp)
 			live = live.to_s
-			if exp.nil? 
-				exp = "<i><span style='color: grey'>The document provided does not request this content.</span></i>"
-				return exp
-			else
-				live = "<i>None</i>." if live.nil?
-				if live.strip == exp.strip && live.strip != "" 
-					live = "<span style='color:green;'>#{live}</span>"
-				elsif live.strip == ""
-					live = "<i>Empty.</i>"
-				elsif !(live.strip == exp.strip) && !(live.strip == "")
-					live = "<span style='color:red;'>#{live}</span>"
-				end
-				return live
-			end
+			return live = "<span style='color:green;'>#{live}</span>" if live.strip == exp.strip
+			return live = "<span>#{live}</span>" if exp == "<i>None.</i>" || exp == "<i>Empty.</i>"
+			live = "<span style='color:red;'>#{live}</span>"
 		end
 	end
 

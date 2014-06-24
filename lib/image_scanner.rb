@@ -21,9 +21,7 @@ require_relative "./scanner.rb"
   def collect_live_urls(worksheet)
     live_urls = []
     for row in 1..worksheet.num_rows
-      if /http/ =~ worksheet[row, 1]
-        live_urls.push(worksheet[row, 1])
-      end
+      live_urls.push(worksheet[row, 1]) if /http/ =~ worksheet[row, 1]
     end
     return live_urls
   end

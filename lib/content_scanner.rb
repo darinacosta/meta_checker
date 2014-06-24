@@ -26,11 +26,8 @@ module Scannerset
     
     def assemble_page_content_hash(page_url, content_item)
       page = pull_page_content(page_url)
-      if page == "error"
-        requested_meta = return_error_view(page_url)
-      else
-        requested_meta = scrape_requested_meta(content_item)
-      end
+      return requested_meta = return_error_view(page_url) if page == "error"
+      requested_meta = scrape_requested_meta(content_item)
       requested_meta[:page_url] = page_url
       return requested_meta
     end
@@ -38,8 +35,10 @@ module Scannerset
     def scrape_live_meta(page)
       live_title_raw = page.css("title").text
       live_description_raw = page.xpath("//meta[make_xpath_nodeset_case_insensitive(@name, 'description')]/@content", XpathFunctions.new).text
-      live_title = sanitize_content(live_title_raw)
-      live_description = sanitize_content(live_description_raw)
+      live_title_sanitized = sanitize_content(live_title_raw)
+      live_title = populate_if_empty(live_title_sanitized)
+      live_description_sanitized = sanitize_content(live_description_raw)
+      live_description = populate_if_empty(live_description_sanitized)
       return {
         live_title:       live_title,
         live_description: live_description
@@ -48,13 +47,26 @@ module Scannerset
 
     def scrape_requested_meta(content)
       requested_title_match = /Page.Title.+?Tag\):(.*$)/.match(content)
-      requested_title = requested_title_match[1] if requested_title_match != nil
+      requested_title = populate_if_empty(requested_title_match)
       requested_description_match = /(?:Page|Meta)?.+?Description\)?:(.*)/.match(content)
-      requested_description = requested_description_match[1] if requested_description_match != nil
+      requested_description = populate_if_empty(requested_description_match)
       return {
         requested_title:       requested_title,
         requested_description: requested_description
       }
+    end
+
+    def populate_if_empty(requested_content)
+      if requested_content == nil
+        checked_requested_content = "<i>None.</i>" 
+      elsif requested_content.kind_of?(MatchData)
+        checked_requested_content = requested_content[1]
+        checked_requested_content = "<i>Empty.</i>" if requested_content[1].strip == ""
+      elsif requested_content.kind_of?(String) 
+        checked_requested_content = requested_content
+        checked_requested_content = "<i>Empty.</i>" if requested_content.strip == ""
+      end
+      return checked_requested_content
     end
 
     def return_error_view(page_url)
