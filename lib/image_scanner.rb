@@ -17,7 +17,6 @@ require_relative "./scanner.rb"
       return entries
     end
 
-
   def collect_live_urls(worksheet)
     live_urls = []
     for row in 1..worksheet.num_rows
@@ -40,8 +39,8 @@ require_relative "./scanner.rb"
     page_content = page_content_hash[page_url]
     image_url = worksheet[row, 2]
     image_file_name = image_url.split('/').last
-    requested_title = worksheet[row, 3]
-    requested_alt = worksheet[row, 4]
+    requested_title = populate_if_empty(worksheet[row, 3])
+    requested_alt = populate_if_empty(worksheet[row, 4])
     live_meta = get_live_image_meta(page_content, image_file_name)
     live_title = live_meta[:live_title]
     live_alt = live_meta[:live_alt]
@@ -84,8 +83,10 @@ require_relative "./scanner.rb"
       live_alt = "Page error."
     else 
       if page_content.at_css("img[src*='#{image_file_name}']")
-        live_title = page_content.at_css("img[src*='#{image_file_name}']")[:title]
-        live_alt = page_content.at_css("img[src*='#{image_file_name}']")[:alt]
+        live_title_raw = page_content.at_css("img[src*='#{image_file_name}']")[:title]
+        live_title = populate_if_empty(live_title_raw)
+        live_alt_raw = page_content.at_css("img[src*='#{image_file_name}']")[:alt]
+        live_alt = populate_if_empty(live_alt_raw)
       else 
         live_title = "<i>Image does not exist on page.</i>"
         live_alt = "<i>Image does not exist on page.</i>"

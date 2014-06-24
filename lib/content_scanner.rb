@@ -56,19 +56,6 @@ module Scannerset
       }
     end
 
-    def populate_if_empty(requested_content)
-      if requested_content == nil
-        checked_requested_content = "<i>None.</i>" 
-      elsif requested_content.kind_of?(MatchData)
-        checked_requested_content = requested_content[1]
-        checked_requested_content = "<i>Empty.</i>" if requested_content[1].strip == ""
-      elsif requested_content.kind_of?(String) 
-        checked_requested_content = requested_content
-        checked_requested_content = "<i>Empty.</i>" if requested_content.strip == ""
-      end
-      return checked_requested_content
-    end
-
     def return_error_view(page_url)
       {
         error_view: "<a href='#{page_url}' target='_blank'>#{page_url}</a><span style='color: grey'> does not exist. Please ensure that the URL is formatted correctly.</span>"

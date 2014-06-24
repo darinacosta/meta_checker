@@ -22,7 +22,7 @@ module Scannerset
 		def pull_page_content(page_url)
 			#html = @agent.get(url).body
 			page_url = "http://#{page_url}" if page_url !~ /^http/
-			page_content = Nokogiri::HTML(open(page_url, :allow_redirections => :safe), nil, 'UTF-8')
+			page_content = Nokogiri::HTML(open(page_url), nil, 'UTF-8')
 			return page_content
 		rescue OpenURI::HTTPError, URI::InvalidURIError  => error
 			page_content = "error"
@@ -38,6 +38,18 @@ module Scannerset
 		    end
 		  return page_content_hash
 		end		
-	end
 
+		def populate_if_empty(content)
+	    if content == nil
+	      checked_content = "<i>None.</i>" 
+	    elsif content.kind_of?(MatchData)
+	      checked_content = content[1]
+	      checked_content = "<i>Empty.</i>" if content[1].strip == ""
+	    elsif content.kind_of?(String) 
+	      checked_content = content
+	      checked_content = "<i>Empty.</i>" if content.strip == ""
+	    end
+	    return checked_content
+  	end
+	end
 end
