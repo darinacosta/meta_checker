@@ -5,8 +5,9 @@ class MetaChecker < Sinatra::Base
     erb :form
   end
 
-  get '/instructions' do
-    erb :instructions
+  get '/docs/:type' do
+    return erb :wordformat if params[:type] == "word"
+    erb :instructions 
   end
 
   post '/form' do
@@ -14,7 +15,7 @@ class MetaChecker < Sinatra::Base
     @requested_meta = Scannerset::Scanner.detect(user_input).pull_data(user_input)
     @requested_meta_json = @requested_meta.to_json
     if @requested_meta.empty?
-    	"Empty"
+    	erb :empty
     elsif @requested_meta[0].is_a?(Scannerset::ImageProfile)
       erb :image_output
     else
