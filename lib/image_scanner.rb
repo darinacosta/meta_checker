@@ -15,6 +15,8 @@ require_relative "./scanner.rb"
         end
       end
       return entries
+      rescue GoogleDrive::Error 
+        return "Google Error"
     end
 
   def collect_live_urls(worksheet)

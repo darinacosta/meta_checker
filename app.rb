@@ -11,11 +11,16 @@ class MetaChecker < Sinatra::Base
   end
 
   post '/form' do
-    user_input=params[:URL1]
+    user_input = params[:URL1]
     @requested_meta = Scannerset::Scanner.detect(user_input).pull_data(user_input)
+    puts @requested_meta
     @requested_meta_json = @requested_meta.to_json
     if @requested_meta.empty?
-    	erb :empty
+      @error_message = "Meta Checker is unable to parse the content provided."
+    	erb :error
+    elsif @requested_meta == "Google Error"
+      @error_message = "Please ensure that the Google spreadsheet provided is not set to private."
+      erb :error
     elsif @requested_meta[0].is_a?(Scannerset::ImageProfile)
       erb :image_output
     else
