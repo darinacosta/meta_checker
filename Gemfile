@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'sinatra', '~> 1.4.5'
 gem 'mechanize'
-gem 'google_drive'
+gem 'google_drive', '~> 0.3.9'
 gem 'json'
 gem 'coffee-script'
 gem 'open_uri_redirections'

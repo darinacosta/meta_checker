@@ -11,7 +11,7 @@ module Scannerset
 		end
 
 		def self.detect(user_input)
-			if /\/spreadsheet\// =~ user_input && user_input.length < 200
+			if /\/spreadsheet/ =~ user_input && user_input.length < 200
 				return ImageScanner.new(user_input)
 			else
 				sanitized_content = sanitize_content(user_input)
